@@ -3,8 +3,6 @@ package com.thales.qrapi.services;
 import java.util.List;
 import java.util.Optional;
 
-import javax.management.InvalidAttributeValueException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +58,7 @@ public class QrCodeApiService implements QrCodeService<String, QrCodeDto> {
 		try {
 			long entryId = qrCodeMapper.decodeIds(id);
 			qrCode = qrCodeRepo.findById(Long.valueOf(entryId));
-		} catch (InvalidAttributeValueException exc) {
+		} catch (BadRequestApiException exc) {
 			exc.printStackTrace();
 			throw new BadRequestApiException(exc.getMessage());
 		} catch (NotFoundApiException exc) {
@@ -77,5 +75,38 @@ public class QrCodeApiService implements QrCodeService<String, QrCodeDto> {
 		
 		QrCodeDto res = qrCodeMapper.mapEntToDto(qrCode.get());		
 		return res;
+	}
+
+	// TODO: write some tests
+	@Override
+	@Transactional
+	public String deleteById(String id) throws BadRequestApiException, DbApiException, NotFoundApiException {
+		
+		if (id == null) {
+			throw new BadRequestApiException(illegalArgumentsProvided);
+		}
+		
+		Optional<QrCode> qrCode = Optional.empty();
+		try {
+			long entryId = qrCodeMapper.decodeIds(id);
+			qrCode = qrCodeRepo.findById(Long.valueOf(entryId));
+			
+			if (!qrCode.isPresent()) {
+				throw new NotFoundApiException(notFoundInDbError);
+			}
+			
+			qrCodeRepo.delete(qrCode.get());
+		} catch (BadRequestApiException exc) {
+			exc.printStackTrace();
+			throw new BadRequestApiException(exc.getMessage());
+		} catch (NotFoundApiException exc) {
+			exc.printStackTrace();
+			throw new NotFoundApiException(exc.getMessage());
+		} catch(Exception exc) {
+			exc.printStackTrace();
+			throw new DbApiException(findInDbError);
+		}
+		
+		return id;
 	}
 }

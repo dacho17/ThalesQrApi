@@ -9,4 +9,5 @@ import com.thales.qrapi.exceptions.NotFoundApiException;
 public interface QrCodeService<K, V> {
 	List<V> findAll() throws DbApiException;
 	V findById(K id) throws BadRequestApiException, DbApiException, NotFoundApiException;
+	K deleteById(K id) throws BadRequestApiException, DbApiException, NotFoundApiException;
 }
