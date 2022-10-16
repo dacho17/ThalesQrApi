@@ -3,11 +3,13 @@ package com.thales.qrapi.entities;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -33,7 +35,8 @@ public class QrCode {
 	@Column(name="text_content")
 	private String textContent;
 	
-	@OneToOne(mappedBy="qrCode")
+	@OneToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "vcard_id")
 	private Vcard vCard;
 	
 	@Column(name="is_deleted")
@@ -50,18 +53,15 @@ public class QrCode {
 
 	public QrCode() {}
 	
-	public QrCode(String fileName, short contentType, byte[] byteContent, String textContent, Vcard vCard,
-			boolean isDeleted, String createdBy, Timestamp createdDate, Timestamp deletedDate) {
+	public QrCode(String fileName, short contentType, byte[] byteContent, String textContent,
+			String createdBy, Timestamp createdDate) {
 		super();
 		this.fileName = fileName;
 		this.contentType = contentType;
 		this.byteContent = byteContent;
 		this.textContent = textContent;
-		this.vCard = vCard;
-		this.isDeleted = isDeleted;
 		this.createdBy = createdBy;
 		this.createdDate = createdDate;
-		this.deletedDate = deletedDate;
 	}
 
 	public long getId() {
