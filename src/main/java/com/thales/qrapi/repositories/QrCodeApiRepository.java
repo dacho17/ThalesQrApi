@@ -22,6 +22,14 @@ public class QrCodeApiRepository implements QrCodeRepository<Long, QrCode> {
 	@Autowired
 	private EntityManager entityManager;
 	
+	// TODO: write some tests
+	@Override
+	public void save(QrCode qrCode) {
+		
+		entityManager.persist(qrCode);
+	}
+	
+	
 	// TODO: Write some tests!
 	@Override
 	public List<QrCode> findAll() {
