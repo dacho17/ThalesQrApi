@@ -1,5 +1,6 @@
 package com.thales.qrapi.repositories;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +54,17 @@ public class QrCodeApiRepository implements QrCodeRepository<Long, QrCode> {
 			return Optional.ofNullable(qrCode);
 		} catch (NoResultException exc) {
 			exc.printStackTrace();
+			
 			return Optional.empty();
 		}
-	}	
+	}
+	
+	// TODO: write some tests!
+	@Override
+	public void delete(QrCode qrCode) {
+
+		qrCode.setDeleted(true);
+		qrCode.setDeletedDate(new Timestamp(System.currentTimeMillis()));
+		entityManager.merge(qrCode);
+	}
 }
