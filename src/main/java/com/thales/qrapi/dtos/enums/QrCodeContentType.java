@@ -5,26 +5,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum QrCodeContentType {
-	TEXT(0), URL(1), VCARD(2);
+	TEXT((short)0), URL((short)1), VCARD((short)2);
 	
-	private int value;
-	private static final Map<Integer, QrCodeContentType> lookupMap
-		= new HashMap<Integer, QrCodeContentType>();
+	private short value;
+	
+	private static final Map<Short, QrCodeContentType> lookupMap
+		= new HashMap<Short, QrCodeContentType>();
 	
 	static {
 		for(QrCodeContentType type: EnumSet.allOf(QrCodeContentType.class))
 			lookupMap.put(type.getValue(), type);
 	}
 	
-	private QrCodeContentType(final int value) {
+	private QrCodeContentType(final short value) {
 		this.value = value;
 	}
 	
-	public int getValue() {
+	public short getValue() {
 		return value;
 	}
 
-	public static QrCodeContentType getType(int val) {
+	public static QrCodeContentType getType(short val) {
 		return lookupMap.get(val);
 	}
 }
