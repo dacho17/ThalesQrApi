@@ -3,8 +3,6 @@ package com.thales.qrapi.utils;
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
-import com.thales.qrapi.exceptions.BadRequestApiException;
-import com.thales.qrapi.exceptions.ServerApiException;
 
 import javax.imageio.ImageIO;
 
@@ -12,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+
+import com.thales.qrapi.exceptions.BadRequestApiException;
+import com.thales.qrapi.exceptions.ServerApiException;
 
 @Component
 public class QrCodeReader {

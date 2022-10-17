@@ -8,7 +8,7 @@ import ezvcard.VCard;
 @Component
 public class VcardParser {
 
-	// if no vcard is found in the qrcode content, return null and handle the case in a non-vcard way in the calling func.
+	// NOTE: if no vcard is found in the qrcode content, return null and handle the case in a non-vcard way in the calling func.
 	public String parseStringContent(String strContent) {
 		VCard vcard = Ezvcard.parse(strContent).first();
 		
