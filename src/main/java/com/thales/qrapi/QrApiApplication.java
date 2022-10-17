@@ -9,5 +9,4 @@ public class QrApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(QrApiApplication.class, args);
 	}
-
 }
