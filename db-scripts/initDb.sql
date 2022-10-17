@@ -38,45 +38,47 @@ CREATE TABLE IF NOT EXISTS `vcards` (
 ALTER TABLE `qr_codes` ADD FOREIGN KEY (`vcard_id`) REFERENCES `vcards` (`id`);
 
 CREATE TABLE IF NOT EXISTS `users` (
-  `username` varchar(255) PRIMARY KEY NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `enabled` tinyint NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE IF NOT EXISTS `authorities` (
+  `id` int PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
-  `authority` varchar(255) NOT NULL,
-
-  UNIQUE KEY `authorities_idx_1` (`username`, `authority`),
-  
-  CONSTRAINT `authorities_ibfk_1`
-  FOREIGN KEY (`username`)
-  REFERENCES `users` (`username`)
+  `password` varchar(255) NOT NULL,
+  `role_type` tinyint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- CREATE TABLE IF NOT EXISTS `authorities` (
+--  `username` varchar(255) NOT NULL,
+--  `authority` varchar(255) NOT NULL,
+--
+--  UNIQUE KEY `authorities_idx_1` (`username`, `authority`),
+  
+--  CONSTRAINT `authorities_ibfk_1`
+--  FOREIGN KEY (`username`)
+--  REFERENCES `users` (`username`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------
 --        POPULATING TABLES
 -- --------------------------------------
 INSERT IGNORE INTO `users`
 VALUES
-('Thales', '{noop}TheFirstPhilosopher', 1),
-('Socrates', '{noop}PlatosFriend', 1),
-('Aristotle', '{noop}ThePhilosopher', 1),
-('Steiner', '{bcrypt}$2a$12$ojewJqLBGvdafvNO5Pxjp.21ua2SvN/zGbIvZTO2RWYtSaNxdihQ6', 1);
+(1, 'Thales', '{noop}TheFirstPhilosopher', 2),
+(2, 'Socrates', '{noop}PlatosFriend', 1),
+(3, 'Aristotle', '{noop}ThePhilosopher', 2),
+(4, 'Steiner', '{bcrypt}$2a$12$ojewJqLBGvdafvNO5Pxjp.21ua2SvN/zGbIvZTO2RWYtSaNxdihQ6', 2);
 
-INSERT IGNORE INTO `authorities`
-VALUES
-('Thales', 'ROLE_STUDENT'),
-('Thales', 'ROLE_TEACHER'),
-('Socrates', 'ROLE_STUDENT'),
-('Socrates', 'ROLE_TEACHER'),
-('Aristotle', 'ROLE_STUDENT'),
-('Aristotle', 'ROLE_TEACHER'),
-('Steiner', 'ROLE_STUDENT'),
-('Steiner', 'ROLE_TEACHER'),
-('Thales', 'ROLE_ADMIN'),
-('Aristotle', 'ROLE_ADMIN'),
-('Steiner', 'ROLE_ADMIN');
+-- INSERT IGNORE INTO `authorities`
+-- VALUES
+-- ('Thales', 'ROLE_STUDENT'),
+-- ('Thales', 'ROLE_TEACHER'),
+-- ('Socrates', 'ROLE_STUDENT'),
+-- ('Socrates', 'ROLE_TEACHER'),
+-- ('Aristotle', 'ROLE_STUDENT'),
+-- ('Aristotle', 'ROLE_TEACHER'),
+-- ('Steiner', 'ROLE_STUDENT'),
+-- ('Steiner', 'ROLE_TEACHER'),
+-- ('Thales', 'ROLE_ADMIN'),
+-- ('Aristotle', 'ROLE_ADMIN'),
+-- ('Steiner', 'ROLE_ADMIN');
 
 INSERT INTO `vcards`
 VALUES
