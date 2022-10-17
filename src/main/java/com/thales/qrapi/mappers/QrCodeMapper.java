@@ -40,7 +40,7 @@ public class QrCodeMapper {
 			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(qrCode.getCreatedDate())
 		);
 		
-		// Set the content based on the content type of this QrCode
+		// NOTE: Set the content based on the content type of this QrCode
 		if (res.getContentType() == QrCodeContentType.VCARD) {
 			res.setContent(qrCode.getvCard().getXmlContent());
 		} else {
@@ -56,9 +56,9 @@ public class QrCodeMapper {
 		long[] ids = hash.decode(id);
 		
 		if (ids.length < 1) {
-			// if here -> decoder was unsuccessful in decoding the provided string
+			// NOTE: if here -> decoder was unsuccessful in decoding the provided string
 			if (id != null && id.length() > 0) {
-				// if here -> id was provided -> the hash is unrecognized and the entry could not have been encoded with the hash
+				// NOTE: if here -> id was provided -> the hash is unrecognized and the entry could not have been encoded with the hash
 				throw new NotFoundApiException(faultyId);
 			}
 			throw new BadRequestApiException(hashIdError);

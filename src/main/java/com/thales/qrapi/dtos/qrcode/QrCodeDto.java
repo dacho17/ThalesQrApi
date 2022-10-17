@@ -7,7 +7,6 @@ public class QrCodeDto {
 	private String fileName;
 	private QrCodeContentType contentType;
 	private String content;	// NOTE: Datatype of this property was initially considered to be generic so to be able to carry String/JSON/XML/Vcard custom defined object
-	// private byte[] byteContent;
 	private String createdBy;
 	private String createdDate;
 	
