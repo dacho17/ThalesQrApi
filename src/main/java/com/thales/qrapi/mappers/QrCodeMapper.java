@@ -8,8 +8,8 @@ import org.hashids.Hashids;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.thales.qrapi.dtos.QrCodeDto;
 import com.thales.qrapi.dtos.enums.QrCodeContentType;
+import com.thales.qrapi.dtos.qrcode.QrCodeDto;
 import com.thales.qrapi.entities.QrCode;
 import com.thales.qrapi.exceptions.BadRequestApiException;
 import com.thales.qrapi.exceptions.NotFoundApiException;

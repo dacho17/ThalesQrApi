@@ -15,46 +15,47 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="qr_codes")
+@Table(name = "qr_codes")
 public class QrCode {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private long id;
 
-	@Column(name="file_name")
+	@Column(name = "file_name")
 	private String fileName;
-	
-	@Column(name="content_type")
+
+	@Column(name = "content_type")
 	private short contentType;
 
-	@Lob	// NOTE: performance improvements exist
-	@Column(name="byte_content")
+	@Lob // NOTE: performance improvements exist
+	@Column(name = "byte_content")
 	private byte[] byteContent;
-	
-	@Column(name="text_content")
+
+	@Column(name = "text_content")
 	private String textContent;
-	
+
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "vcard_id")
 	private Vcard vCard;
-	
-	@Column(name="is_deleted")
+
+	@Column(name = "is_deleted")
 	private boolean isDeleted;
-	
-	@Column(name="created_by")
+
+	@Column(name = "created_by")
 	private String createdBy;
-	
-	@Column(name="created_date")
+
+	@Column(name = "created_date")
 	private Timestamp createdDate;
-	
-	@Column(name="deleted_date")
+
+	@Column(name = "deleted_date")
 	private Timestamp deletedDate;
 
-	public QrCode() {}
-	
-	public QrCode(String fileName, short contentType, byte[] byteContent, String textContent,
-			String createdBy, Timestamp createdDate) {
+	public QrCode() {
+	}
+
+	public QrCode(String fileName, short contentType, byte[] byteContent, String textContent, String createdBy,
+			Timestamp createdDate) {
 		super();
 		this.fileName = fileName;
 		this.contentType = contentType;

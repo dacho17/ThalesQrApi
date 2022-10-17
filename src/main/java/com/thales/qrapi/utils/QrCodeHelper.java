@@ -6,8 +6,8 @@ import java.net.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.thales.qrapi.dtos.QrCodeContentHolder;
 import com.thales.qrapi.dtos.enums.QrCodeContentType;
+import com.thales.qrapi.dtos.qrcode.QrCodeContentHolder;
 import com.thales.qrapi.exceptions.BadRequestApiException;
 import com.thales.qrapi.exceptions.ServerApiException;
 

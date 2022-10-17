@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.thales.qrapi.dtos.QrCodeContentHolder;
-import com.thales.qrapi.dtos.QrCodeDto;
 import com.thales.qrapi.dtos.enums.QrCodeContentType;
+import com.thales.qrapi.dtos.qrcode.QrCodeContentHolder;
+import com.thales.qrapi.dtos.qrcode.QrCodeDto;
 import com.thales.qrapi.entities.QrCode;
 import com.thales.qrapi.entities.Vcard;
 import com.thales.qrapi.exceptions.BadRequestApiException;
@@ -154,21 +154,25 @@ public class QrCodeApiService implements QrCodeService<String, QrCodeDto> {
 	private QrCode generateNewQrCode(byte[] bytes, MultipartFile file, QrCodeContentHolder contentHolder) {
 		String fileName = file.getOriginalFilename();
 		
+		// NOTE: code that will get me an authenticated user
+//		Authentication authentication = 
+//		        authenticationManager.authenticate(
+//		            new UsernamePasswordAuthenticationToken(username, password)
+//		        );
+//
+//		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		
 		QrCode newQrCode = new QrCode(
 			fileName,
 			contentHolder.getContentType().getValue(),
 			bytes,
 			contentHolder.getContent(),
-			"DavidTODO",
+			"DavidTODO",	// TODO: username of the authenticated account must be inserted here
 			new Timestamp(System.currentTimeMillis())
 		);
 		
-		System.out.println(newQrCode);
-		
 		if (QrCodeContentType.getType(newQrCode.getContentType()) == QrCodeContentType.VCARD)
 			setVcardQrCodeContent(newQrCode, contentHolder);
-			
-		System.out.println(newQrCode);
 		
 		return newQrCode;
 	}

@@ -9,18 +9,19 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="vcards")
+@Table(name = "vcards")
 public class Vcard {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private int id;
-	
-	@Lob	// NOTE: performance improvements exist
-	@Column(name="xml_content")
+
+	@Lob // NOTE: performance improvements exist
+	@Column(name = "xml_content")
 	private String xmlContent;
-	
-	public Vcard() {}
+
+	public Vcard() {
+	}
 
 	public Vcard(String xmlContent) {
 		super();

@@ -1,4 +1,4 @@
-package com.thales.qrapi.dtos;
+package com.thales.qrapi.dtos.qrcode;
 
 import com.thales.qrapi.dtos.enums.QrCodeContentType;
 
