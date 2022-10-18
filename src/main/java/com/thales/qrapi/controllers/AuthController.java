@@ -1,5 +1,7 @@
 package com.thales.qrapi.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,6 +47,8 @@ public class AuthController {
 	private static final String httpConflict = "409";
 	private static final String httpServerError = "500";
 	
+	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+	
 	@Autowired
 	private UserApiService userService;
 	
@@ -58,9 +62,11 @@ public class AuthController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@PostMapping("/login")
 	public ResponseObject<JwtResponse> login(@RequestBody LoginRequest loginRequest) {
-
+		logger.info("POST /login endpoint accessed.");
+		
 		JwtResponse jwtRes = userService.createJwtResponse(loginRequest);
 		
+		logger.info(loginSuccess);
 		return new ResponseObject<>(loginSuccess, jwtRes);
 	} 
 	
@@ -74,16 +80,20 @@ public class AuthController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@PostMapping("/signup")
 	public ResponseObject<String> signup(@RequestBody SignupRequest signupRequest) throws Exception {
+		logger.info("POST /signup endpoint accessed.");
 		
 		if (userService.existsByUsername(signupRequest.getUsername())) {
-			throw new UniqueIdentifierException(userAlreadyExists);			
+			logger.error(String.format("User with username=%s already exists in the system.", signupRequest.getUsername()));
+			throw new UniqueIdentifierException(userAlreadyExists);
 		}
 		
 		try {
 			String newUsername = userService.save(signupRequest);
 			
+			logger.info(signupSuccess);
 			return new ResponseObject<>(signupSuccess, newUsername);
 		} catch (Exception exc) {
+			logger.error(exc.getMessage());
 			throw new BadRequestApiException(errorInRequest);
 		}
 	}

@@ -2,6 +2,8 @@ package com.thales.qrapi.controllers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,6 +58,8 @@ public class QrCodeController {
 	private static final String httpNotFound = "404";
 	private static final String httpServerError = "500";
 	
+	private static final Logger logger = LoggerFactory.getLogger(QrCodeController.class);
+	
 	@Autowired
 	private QrCodeService<String, QrCodeDto> qrCodeService;
 	
@@ -70,13 +74,16 @@ public class QrCodeController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@PostMapping(consumes = "multipart/form-data")
 	public ResponseObject<String> createQrCode(@RequestParam("file") MultipartFile file) throws Exception {
+		logger.info("POST /qr-codes endpoint accessed.");
 
 		if (file == null || file.getSize() == 0) {
+			logger.error("/qr-codes");
 			throw new BadRequestApiException(noFileInRequest);
 		}
 		
 		String id = qrCodeService.save(file);
 		
+		logger.info(uploadSuccess);
 		return new ResponseObject<>(uploadSuccess, id);
 	}
 	
@@ -89,9 +96,11 @@ public class QrCodeController {
 	@ResponseStatus(code = HttpStatus.OK)
 	@GetMapping
 	public ResponseObject<List<QrCodeDto>> getQrCodes() {
+		logger.info("GET /qr-codes enpoint accessed.");
 		
 		List<QrCodeDto> res = qrCodeService.findAll();
 		
+		logger.info(getAllSuccess);
 		return new ResponseObject<>(getAllSuccess, res);
 	}
 	
@@ -105,9 +114,11 @@ public class QrCodeController {
 	@ResponseStatus(code = HttpStatus.OK)
 	@GetMapping("/{id}")
 	public ResponseObject<QrCodeDto> getQrCode(@PathVariable String id) throws Exception {
+			logger.info(String.format("GET /qr-codes/%s enpoint accessed.", id));
 		
 			QrCodeDto res = qrCodeService.findById(id);
 			
+			logger.info(String.format("QrCode with encoded id=%s is being returned in the response.", id));
 			return new 	ResponseObject<>(getOneSuccess, res);
 	}
 	
@@ -124,9 +135,11 @@ public class QrCodeController {
 	@ResponseStatus(code = HttpStatus.OK)
 	@DeleteMapping("/{id}")
 	public ResponseObject<String> deleteQrCode(@PathVariable String id) throws Exception {
+		logger.info(String.format("DELETE /qr-codes/%s enpoint accessed.", id));
 		
 		String res = qrCodeService.deleteById(id);
 		
+		logger.info(String.format("QrCode with encoded id=%s has successfully been deleted.", id));
 		return new 	ResponseObject<>(deleteSuccess, res);
 	}
 }
