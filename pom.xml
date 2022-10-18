@@ -59,6 +59,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.hashids</groupId>
 			<artifactId>hashids</artifactId>
 			<version>1.0.3</version>
@@ -80,12 +86,11 @@
 			<artifactId>javase</artifactId>
 			<version>3.4.1</version>
 		</dependency>
-		
+
 		<dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.9.1</version>
-        </dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

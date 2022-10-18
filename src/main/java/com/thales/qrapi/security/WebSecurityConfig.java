@@ -21,7 +21,7 @@ import com.thales.qrapi.services.AuthApiService;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
-
+	
 	@Autowired
 	private AuthApiService authService;
 
@@ -71,8 +71,13 @@ public class WebSecurityConfig {
 			.antMatchers(HttpMethod.POST, "/qr-codes/**").authenticated()
 			.antMatchers(HttpMethod.DELETE, "/qr-codes/**").hasRole("ADMIN")
 			.antMatchers(HttpMethod.POST, "/auth/**").permitAll()
+			.antMatchers(HttpMethod.GET, "/docs/**").permitAll()
+			.antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+//			.antMatchers(HttpMethod.POST, "/swagger-ui/**").permitAll()
+//			.antMatchers(HttpMethod.DELETE, "/swagger-ui/**").permitAll()
+//			.antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
 			.anyRequest().authenticated();
-		
+
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
