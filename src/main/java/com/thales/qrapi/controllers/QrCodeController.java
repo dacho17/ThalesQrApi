@@ -95,7 +95,7 @@ public class QrCodeController {
 		@ApiResponse(responseCode = httpServerError, description = internalServerError, content = @Content) })
 	@ResponseStatus(code = HttpStatus.OK)
 	@GetMapping
-	public ResponseObject<List<QrCodeDto>> getQrCodes() {
+	public ResponseObject<List<QrCodeDto>> getQrCodes() throws Exception {
 		logger.info("GET /qr-codes enpoint accessed.");
 		
 		List<QrCodeDto> res = qrCodeService.findAll();

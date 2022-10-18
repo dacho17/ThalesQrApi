@@ -20,11 +20,12 @@ import com.thales.qrapi.dtos.enums.UserRole;
 import com.thales.qrapi.entities.User;
 import com.thales.qrapi.exceptions.DbApiException;
 import com.thales.qrapi.repositories.interfaces.UserRepository;
+import com.thales.qrapi.services.interfaces.UserService;
 import com.thales.qrapi.utils.JwtUtils;
 import com.thales.qrapi.utils.UserDetailsHelper;
 
 @Service
-public class UserApiService {	// implements UserDetailsService
+public class UserApiService implements UserService {
 	
 	private static final String dbError = "An exception has occured in communication with the database.";
 	
