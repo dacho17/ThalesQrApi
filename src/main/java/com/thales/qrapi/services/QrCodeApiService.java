@@ -7,6 +7,9 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,8 +49,10 @@ public class QrCodeApiService implements QrCodeService<String, QrCodeDto> {
 	public String save(MultipartFile file) throws BadRequestApiException, ServerApiException, DbApiException {
 		try {
 			byte[] bytes = file.getBytes();
-			QrCode newQrCode = qrCodeHelper.generateNewQrCode(bytes, file);
-
+			
+			QrCode newQrCode = qrCodeHelper.generateNewQrCode(bytes, file.getOriginalFilename());
+			setCreatedByForNewQrCode(newQrCode);
+			
 			logger.info(String.format("About to store the newly generated qrCode with [filename=%s].", newQrCode.getFileName()));
 			qrCodeRepo.save(newQrCode);
 			logger.info(String.format("QrCode with [filename=%s], and [id=%d] has been stored.", newQrCode.getFileName(), newQrCode.getId()));
@@ -146,5 +151,11 @@ public class QrCodeApiService implements QrCodeService<String, QrCodeDto> {
 		}
 		
 		return id;
+	}
+	
+	private void setCreatedByForNewQrCode(QrCode qrCode) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		qrCode.setCreatedBy(userDetails.getUsername());
 	}
 }

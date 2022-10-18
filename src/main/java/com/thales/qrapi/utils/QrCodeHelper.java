@@ -7,11 +7,7 @@ import java.sql.Timestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.thales.qrapi.dtos.enums.QrCodeContentType;
 import com.thales.qrapi.dtos.qrcode.QrCodeContentHolder;
@@ -31,21 +27,17 @@ public class QrCodeHelper {
 	@Autowired
 	private VcardParser vCardParser;
 	
-	public QrCode generateNewQrCode(byte[] bytes, MultipartFile file) throws BadRequestApiException, ServerApiException {
-		logger.info(String.format("Starting to generate a new QrCode object from the [file=%s].", file.getOriginalFilename()));
+	public QrCode generateNewQrCode(byte[] bytes, String fileName) throws BadRequestApiException, ServerApiException {
+		logger.info(String.format("Starting to generate a new QrCode object from the [file=%s].", fileName));
 		
 		QrCodeContentHolder contentHolder = extractQrCodeData(bytes);
-		String fileName = file.getOriginalFilename();
-		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		
+
 		QrCode newQrCode = new QrCode(
 			fileName,
 			contentHolder.getContentType().getValue(),
 			bytes,
 			contentHolder.getContent(),
-			userDetails.getUsername(),
+			null,	// for the moment, username will be null. Service layer will set it to a value
 			new Timestamp(System.currentTimeMillis())
 		);
 		
@@ -53,7 +45,7 @@ public class QrCodeHelper {
 			setVcardQrCodeContent(newQrCode, contentHolder);	// NOTE: if contentType is vcard, transfer the content to vcard object
 		
 		logger.info(String.format("New QrCode of type [type=%s] object successfully generated for the file [file=%s].",
-				QrCodeContentType.getType(newQrCode.getContentType()), file.getOriginalFilename()));
+				QrCodeContentType.getType(newQrCode.getContentType()), fileName));
 		return newQrCode;	
 	}
 	
