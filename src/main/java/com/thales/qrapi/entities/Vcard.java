@@ -1,5 +1,7 @@
 package com.thales.qrapi.entities;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,5 +49,17 @@ public class Vcard {
 	@Override
 	public String toString() {
 		return "Vcard [id=" + id + ", xmlContent=" + xmlContent + "]";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj) return true;
+	    if (obj == null) return false;
+
+	    if (this.getClass() != obj.getClass())
+	        return false;
+	    
+	    Vcard vCard = (Vcard) obj;
+	    return Objects.equals(this.xmlContent, vCard.xmlContent);
 	}
 }
