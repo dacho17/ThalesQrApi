@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import com.thales.qrapi.exceptions.BadRequestApiException;
 import com.thales.qrapi.exceptions.ServerApiException;
@@ -39,7 +40,17 @@ public class QrCodeReader {
 
 	        logger.info("QrCode has successfully been read.");
 	        return res.getText();
+		} catch(IOException exc) {
+			logger.error(exc.getStackTrace().toString());
+			throw new BadRequestApiException(errorReadingQr);
+		} catch(IllegalArgumentException exc) {
+			logger.error(exc.getStackTrace().toString());
+			throw new BadRequestApiException(errorReadingQr);
 		} catch(NotFoundException exc) {
+			logger.error(exc.getStackTrace().toString());
+			throw new BadRequestApiException(errorReadingQr);
+		} catch(NullPointerException exc) {
+			// occurs when bufferedImage was unsuccessfully created due to file not being an image
 			logger.error(exc.getStackTrace().toString());
 			throw new BadRequestApiException(errorReadingQr);
 		} catch (Exception exc) {

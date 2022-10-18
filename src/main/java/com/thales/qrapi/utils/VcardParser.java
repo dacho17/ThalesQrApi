@@ -26,4 +26,13 @@ public class VcardParser {
 		
 		return xmlInStringFormat;
 	}
+	
+	
+	// NOTE: NOT USED in the solution! - method used only for testing. An example method.
+	// Moving forward it could prove useful if fine grained data will need to be extracted from Vcards
+	public String getName(String strContent) {
+		VCard vcard = Ezvcard.parse(strContent).first();
+		
+		return vcard.getFormattedName().toString();
+	}
 }
