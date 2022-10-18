@@ -1,0 +1,1 @@
+This is a faulty file which does not contain a QrCode

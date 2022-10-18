@@ -26,11 +26,11 @@ import com.thales.qrapi.exceptions.ServerApiException;
 public class QrCodeHelperTest {
 	
 	@Autowired
-	QrCodeHelper qrCodeHelper;
+	private QrCodeHelper qrCodeHelper;
 	
 	@Test
-	public void readQrCodeContainingText() {
-		// QrCode files to be decoded with their content
+	public void readQrCodesContainingText() {
+		// 3 QrCode files to be decoded with their content of type TEXT
 		Map<String, String> expectedTexts = Map.of(
 			"qrcode7.png", "This is the first text created for testing",
 			"qrcode8.png", "This is the second text created for testing",
@@ -53,8 +53,8 @@ public class QrCodeHelperTest {
 	}
 	
 	@Test
-	public void readQrCodeContainingUrl() {
-		// QrCode files to be decoded with their content
+	public void readQrCodesContainingUrl() {
+		// 3 QrCode files to be decoded with their content of type URL
 		Map<String, String> expectedUrls = Map.of(
 			"qrcode1.png", "https://en.wikipedia.org/wiki/Bird",
 			"qrcode2.png", "https://en.wikipedia.org/wiki/Sun",
@@ -77,8 +77,8 @@ public class QrCodeHelperTest {
 	}
 	
 	@Test
-	public void readQrCodeContainingVcard() {
-		// QrCode files to be decoded with their content
+	public void readQrCodesContainingVcard() {
+		// 3 QrCode files to be decoded with their content VCARD
 		Map<String, Vcard> expectedVcards = Map.of(
 			"qrcode4.png", new Vcard("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><vcards xmlns=\"urn:ietf:params:xml:ns:vcard-4.0\"><vcard><prodid><text>ez-vcard 0.11.3</text></prodid><n><surname>First</surname><given>User1</given><additional/><prefix/><suffix/></n><fn><text>User1 First</text></fn><org><text>Thales</text></org><title><text>Engineer</text></title><adr><pobox/><ext/><street>Blegdamsvej 17</street><locality>København</locality><region/><code>2100</code><country>Denmark</country></adr><tel><parameters><type><text>CELL</text></type></parameters><text>+4510001000</text></tel><email><parameters><type><text>WORK</text><text>INTERNET</text></type></parameters><text>user@first.dk</text></email></vcard></vcards>"),
 			"qrcode5.png", new Vcard("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><vcards xmlns=\"urn:ietf:params:xml:ns:vcard-4.0\"><vcard><prodid><text>ez-vcard 0.11.3</text></prodid><n><surname>Second</surname><given>User2</given><additional/><prefix/><suffix/></n><fn><text>User2 Second</text></fn><org><text>Thales</text></org><title><text>Engineer</text></title><adr><pobox/><ext/><street>12 Ayer Rajah Crescent</street><locality>Singapore</locality><region/><code>139941</code><country>Singapore</country></adr><tel><parameters><type><text>CELL</text></type></parameters><text>+6510001000</text></tel><email><parameters><type><text>WORK</text><text>INTERNET</text></type></parameters><text>user@second.sg</text></email></vcard></vcards>"),
@@ -86,7 +86,6 @@ public class QrCodeHelperTest {
 		);
 		QrCodeContentType expectedContentType = QrCodeContentType.VCARD;
 		String expectedText = null;
-		// Vcard expectedVcard = new Vcard("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><vcards xmlns=\"urn:ietf:params:xml:ns:vcard-4.0\"><vcard><prodid><text>ez-vcard 0.11.3</text></prodid><n><surname>Second</surname><given>User2</given><additional/><prefix/><suffix/></n><fn><text>User2 Second</text></fn><org><text>Thales</text></org><title><text>Engineer</text></title><adr><pobox/><ext/><street>12 Ayer Rajah Crescent</street><locality>Singapore</locality><region/><code>139941</code><country>Singapore</country></adr><tel><parameters><type><text>CELL</text></type></parameters><text>+6510001000</text></tel><email><parameters><type><text>WORK</text><text>INTERNET</text></type></parameters><text>user@second.sg</text></email></vcard></vcards>");
 		
 		try {
 			for (Entry<String, Vcard> entry : expectedVcards.entrySet()) {
@@ -110,10 +109,27 @@ public class QrCodeHelperTest {
 		try {
 			generateQrCode(qrCodeFaulty);
 			
-			assertEquals(true, false);	// if the qrCode is read without exception being thrown, the test should fail
+			assertEquals(true, false);	// NOTE: if the qrCode is read without exception being thrown, the test should fail
 		} catch (Exception exc) {
-			// exception must be one of the following for the test to pass: BadRequestApiException, ServerApiException, DbApiException
+			// NOTE: exception must be one of the following for the test to pass: BadRequestApiException, ServerApiException, DbApiException
 			boolean isValidException = Arrays.asList(allowedExceptions).contains(exc.getClass());
+			assertEquals(isValidException, true);
+		}
+	}
+	
+	@Test
+	public void readFaultyFile() {
+		String qrCodeFaulty = "faultyFile.txt";
+		Class[] allowedExceptions = new Class[] {BadRequestApiException.class, ServerApiException.class, DbApiException.class} ;
+		
+		try {
+			generateQrCode(qrCodeFaulty);
+			
+			assertEquals(true, false);	// NOTE: if the qrCode is read without exception being thrown, the test should fail
+		} catch (Exception exc) {
+			// NOTE: exception must be one of the following for the test to pass: BadRequestApiException, ServerApiException, DbApiException
+			boolean isValidException = Arrays.asList(allowedExceptions).contains(exc.getClass());
+			System.out.println(exc.getClass());
 			assertEquals(isValidException, true);
 		}
 	}
@@ -121,21 +137,9 @@ public class QrCodeHelperTest {
 	// Private functions
 	private QrCode generateQrCode(String fileName) throws BadRequestApiException, ServerApiException, DbApiException {
 		
-//		String sol = "";
 		try {
 			String projectPath = System.getProperty("user.dir");
 			byte[] bytes = Files.readAllBytes(Paths.get(projectPath + "/src/test/resources/static/qrcodes/" + fileName));
-			
-//			byte[] bytes = file.getBytes();
-//			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-//			BufferedImage bufferedImage = ImageIO.read(byteArrayInputStream);
-//			BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(
-//					new BufferedImageLuminanceSource(bufferedImage)));
-//	        // QRCodeReader reader = new QRCodeReader();
-//	        MultiFormatReader multiFormatReader = new MultiFormatReader();
-//	        
-//	        Result res = multiFormatReader.decode(binaryBitmap);
-//	        sol = res.getText();
 			
 			QrCode qrCode = qrCodeHelper.generateNewQrCode(bytes, fileName);
 			return qrCode;
@@ -143,13 +147,5 @@ public class QrCodeHelperTest {
 		} catch(IOException exc) {			// NOTE: specific errors/exceptions will be logged on lower levels
 			throw new BadRequestApiException();
 		}
-
-//		System.out.println(sol);
-//		VCard vcard = Ezvcard.parse(sol).first();
-//
-//		String xmlStringForm = Ezvcard.writeXml(vcard).go();
-//
-//		return xmlStringForm;
-
 	}
 }
