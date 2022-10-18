@@ -93,7 +93,7 @@ public class AuthController {
 			logger.info(signupSuccess);
 			return new ResponseObject<>(signupSuccess, newUsername);
 		} catch (Exception exc) {
-			logger.error(exc.getMessage());
+			logger.warn(exc.getMessage());
 			throw new BadRequestApiException(errorInRequest);
 		}
 	}

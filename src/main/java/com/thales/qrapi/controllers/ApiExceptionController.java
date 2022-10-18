@@ -28,55 +28,55 @@ public class ApiExceptionController {
 	
 	@ExceptionHandler
 	public ResponseEntity<ResponseObject<?>> handleException(UniqueIdentifierException exc) {
-		logger.error(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.CONFLICT));
+		logger.warn(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.CONFLICT));
 		return new ResponseEntity<>(new ResponseObject<>(exc.getMessage(), null), HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ResponseObject<?>> handleException(BadRequestApiException exc) {
-		logger.error(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.BAD_REQUEST));
+		logger.warn(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.BAD_REQUEST));
 		return new ResponseEntity<>(new ResponseObject<>(exc.getMessage(), null), HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ResponseObject<?>> handleException(MultipartException exc) {
-		logger.error(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.BAD_REQUEST));
+		logger.warn(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.BAD_REQUEST));
 		return new ResponseEntity<>(new ResponseObject<>(exc.getMessage(), null), HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ResponseObject<?>> handleException(JsonParseException exc) {
-		logger.error(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.BAD_REQUEST));
+		logger.warn(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.BAD_REQUEST));
 		return new ResponseEntity<>(new ResponseObject<>(exc.getMessage(), null), HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ResponseObject<?>> handleException(HttpMessageNotReadableException exc) {
-		logger.error(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.BAD_REQUEST));
+		logger.warn(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.BAD_REQUEST));
 		return new ResponseEntity<>(new ResponseObject<>(errorReadingReq, null), HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ResponseObject<?>> handleException(NotFoundApiException exc) {
-		logger.error(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.NOT_FOUND));
+		logger.warn(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.NOT_FOUND));
 		return new ResponseEntity<>(new ResponseObject<>(exc.getMessage(), null), HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ResponseObject<?>> handleException(DbApiException exc) {
-		logger.error(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.INTERNAL_SERVER_ERROR));
+		logger.warn(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.INTERNAL_SERVER_ERROR));
 		return new ResponseEntity<>(new ResponseObject<>(exc.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ResponseObject<?>> handleException(InvalidDataAccessResourceUsageException exc) {
-		logger.error(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.INTERNAL_SERVER_ERROR));
+		logger.warn(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.INTERNAL_SERVER_ERROR));
 		return new ResponseEntity<>(new ResponseObject<>(errorReadingDB, null), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ResponseObject<?>> handleException(ServerApiException exc) {
-		logger.error(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.INTERNAL_SERVER_ERROR));
+		logger.warn(String.format("%s occured, API is returning %s response.", exc.getClass().toString(), HttpStatus.INTERNAL_SERVER_ERROR));
 		return new ResponseEntity<>(new ResponseObject<>(exc.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
