@@ -14,12 +14,18 @@ import com.thales.qrapi.exceptions.BadRequestApiException;
 import com.thales.qrapi.exceptions.DbApiException;
 import com.thales.qrapi.exceptions.NotFoundApiException;
 import com.thales.qrapi.exceptions.ServerApiException;
+import com.thales.qrapi.exceptions.UniqueIdentifierException;
 
 @RestControllerAdvice
 public class ApiExceptionController {
 
 	private static final String errorReadingReq ="Exception occurred while reading the request data.";
 	private static final String errorReadingDB ="Exception occurred while trying to retrieve data from the database.";
+	
+	@ExceptionHandler
+	public ResponseEntity<ResponseObject<?>> handleException(UniqueIdentifierException exc) {
+		return new ResponseEntity<>(new ResponseObject<>(exc.getMessage(), null), HttpStatus.CONFLICT);
+	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ResponseObject<?>> handleException(BadRequestApiException exc) {
