@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +21,8 @@ import com.thales.qrapi.utils.JwtUtils;
 
 
 public class ApiAuthTokenFilter extends OncePerRequestFilter {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ApiAuthTokenFilter.class);
 	
 	@Autowired
 	private JwtUtils jwtUtils;
@@ -41,10 +45,10 @@ public class ApiAuthTokenFilter extends OncePerRequestFilter {
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
 				SecurityContextHolder.getContext().setAuthentication(authentication);
-
+				logger.info(String.format("User with [username=%s] is successfully authenticated.", username));
 			} 
 		} catch (Exception exc) {
-			exc.printStackTrace();
+			logger.error(exc.getStackTrace().toString());
 		}
 	
 		filterChain.doFilter(request, response);

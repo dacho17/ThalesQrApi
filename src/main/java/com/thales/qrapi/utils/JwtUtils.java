@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,8 @@ import io.jsonwebtoken.UnsupportedJwtException;
 
 @Component
 public class JwtUtils {
+	
+	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 	
 	@Value("${auth.jwtSecret}")
 	private String jwtSecret;
@@ -45,21 +49,23 @@ public class JwtUtils {
 	public boolean validateJwtToken(String authToken) {
 		try {
 			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+			
+			logger.info(String.format("JWT successfully validated [jwt=%s].", authToken));
 			return true;
 		} catch (SignatureException exc) {
-			exc.printStackTrace();
+			logger.error(exc.getStackTrace().toString());
 			throw new AuthenticationApiException("Signature error");
 		} catch (MalformedJwtException exc) {
-			exc.printStackTrace();
+			logger.error(exc.getStackTrace().toString());
 			throw new AuthenticationApiException("Invalid JWT token");
 		} catch (ExpiredJwtException exc) {
-			exc.printStackTrace();
+			logger.error(exc.getStackTrace().toString());
 			throw new AuthenticationApiException("JWT token is expired");
 		} catch (UnsupportedJwtException exc) {
-			exc.printStackTrace();
+			logger.error(exc.getStackTrace().toString());
 			throw new AuthenticationApiException("JWT token is unsupported");
 		} catch (IllegalArgumentException exc) {
-			exc.printStackTrace();
+			logger.error(exc.getStackTrace().toString());
 			throw new AuthenticationApiException("JWT claims string is empty");
 		}
 	}

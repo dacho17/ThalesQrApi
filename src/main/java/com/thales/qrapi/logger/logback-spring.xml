@@ -7,7 +7,7 @@
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<!-- %logger{36} can be used to output the className in which the logger 
 				is -->
-			<Pattern>%d{HH:mm:ss.SSS} [%-5level] [%thread] msg={%msg}%n</Pattern>
+			<Pattern>%d{HH:mm:ss.SSS} [%-5level] [%thread] msg={ %msg }%n</Pattern>
 		</layout>
 	</appender>
 
@@ -18,7 +18,7 @@
 		<encoder
 			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<!-- %C{1.} can be used to output the className in which the logger is -->
-			<Pattern>%d [%p] [%t] msg={%m}%n</Pattern>
+			<Pattern>%d [%p] [%t] msg={ %m }%n</Pattern>
 		</encoder>
 
 		<rollingPolicy

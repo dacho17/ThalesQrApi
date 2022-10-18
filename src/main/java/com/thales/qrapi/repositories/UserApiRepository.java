@@ -32,9 +32,7 @@ public class UserApiRepository implements UserRepository {
 	    	User res = entityManager.createQuery(query).getSingleResult();
 			
 			return Optional.ofNullable(res);
-		} catch (NoResultException exc) {
-			exc.printStackTrace();
-
+		} catch (NoResultException exc) {	// exception occurs because getSingleResult throws it if not entries have been found
 			return Optional.empty();
 		}
 	}

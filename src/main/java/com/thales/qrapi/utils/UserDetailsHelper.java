@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +15,8 @@ import com.thales.qrapi.entities.User;
 
 public class UserDetailsHelper implements UserDetails {
 	private static final long serialVersionUID = 1L;
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserDetailsHelper.class);
 	
 	private int id;
 	private String username;
@@ -34,11 +38,14 @@ public class UserDetailsHelper implements UserDetails {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority(UserRole.getRole(user.getRoleType()).name()));
 		
-		return new UserDetailsHelper(
-			user.getId(),
-			user.getUsername(),
-			user.getPassword(),
-			authorities);
+		UserDetailsHelper usrDet = new UserDetailsHelper(
+				user.getId(),
+				user.getUsername(),
+				user.getPassword(),
+				authorities);
+		
+		logger.info(String.format("UserDetailsHelper object has successfully been built. [UserDetailsHelper=%s].", usrDet));
+		return usrDet;
 	}
 
 	public int getId() {

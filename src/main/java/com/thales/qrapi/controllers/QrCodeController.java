@@ -118,7 +118,7 @@ public class QrCodeController {
 		
 			QrCodeDto res = qrCodeService.findById(id);
 			
-			logger.info(String.format("QrCode with encoded id=%s is being returned in the response.", id));
+			logger.info(String.format("QrCode with encoded [id=%s] is being returned in the response.", id));
 			return new 	ResponseObject<>(getOneSuccess, res);
 	}
 	
@@ -139,7 +139,7 @@ public class QrCodeController {
 		
 		String res = qrCodeService.deleteById(id);
 		
-		logger.info(String.format("QrCode with encoded id=%s has successfully been deleted.", id));
+		logger.info(String.format("QrCode with encoded [id=%s] has successfully been deleted.", id));
 		return new 	ResponseObject<>(deleteSuccess, res);
 	}
 }

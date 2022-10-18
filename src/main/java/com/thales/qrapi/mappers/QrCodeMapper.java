@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.hashids.Hashids;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,8 @@ public class QrCodeMapper {
 	
 	private static final String hashIdError = "An exception has occured while encoding/decoding the provided id.";
 	private static final String faultyId = "Unrecognized id has been provided as a request parameter.";
+	
+	private static final Logger logger = LoggerFactory.getLogger(QrCodeMapper.class);
 	
 	@Value("${mapper.id.hashSalt}")
 	private String hashSalt;
@@ -52,16 +56,18 @@ public class QrCodeMapper {
 
 	public long decodeIds(String id) throws BadRequestApiException, NotFoundApiException {
 		
+		if (id == null || id.length() < 1) {
+			logger.error(String.format("An invalid identifier has been received from the client [id=%id].", id));
+			throw new BadRequestApiException(hashIdError);
+		}
+		
 		Hashids hash = new Hashids(hashSalt);
 		long[] ids = hash.decode(id);
 		
 		if (ids.length < 1) {
-			// NOTE: if here -> decoder was unsuccessful in decoding the provided string
-			if (id != null && id.length() > 0) {
-				// NOTE: if here -> id was provided -> the hash is unrecognized and the entry could not have been encoded with the hash
-				throw new NotFoundApiException(faultyId);
-			}
-			throw new BadRequestApiException(hashIdError);
+			// NOTE: if here -> id was provided -> the hash is unrecognized and the entry could not have been encoded with the hash
+			logger.error(String.format("Id provided in the request [id=%s] could not be decoded. An entry with the provided Id does not exist.", id));
+			throw new NotFoundApiException(faultyId);
 		}
 		
 		return ids[0];

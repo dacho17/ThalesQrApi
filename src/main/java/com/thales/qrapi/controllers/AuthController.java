@@ -83,7 +83,7 @@ public class AuthController {
 		logger.info("POST /signup endpoint accessed.");
 		
 		if (userService.existsByUsername(signupRequest.getUsername())) {
-			logger.error(String.format("User with username=%s already exists in the system.", signupRequest.getUsername()));
+			logger.error(String.format("User with [username=%s] already exists in the system.", signupRequest.getUsername()));
 			throw new UniqueIdentifierException(userAlreadyExists);
 		}
 		
@@ -93,7 +93,7 @@ public class AuthController {
 			logger.info(signupSuccess);
 			return new ResponseObject<>(signupSuccess, newUsername);
 		} catch (Exception exc) {
-			logger.warn(exc.getMessage());
+			logger.error(exc.getMessage());
 			throw new BadRequestApiException(errorInRequest);
 		}
 	}
