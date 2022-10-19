@@ -1,0 +1,31 @@
+services:
+  api_db:
+    image: mysql
+    container_name: api_db
+    environment:
+      - DB_NAME=rest_api_db
+      - MYSQL_ROOT_PASSWORD=adam
+#      - MYSQL_ALLOW_EMPTY_PASSWORD="true"
+    volumes:
+      - db-data:/var/lib/mysql
+  db_seeder:
+    container_name: db_seeder
+    image: mysql
+    volumes:
+      - ./src/main/resources/db-scripts/initDb.sql:/initDb.sql
+#    environment:
+#      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    entrypoint: [ "bash", "-c", "sleep 10 && mysql --user=root --password=adam --host=api_db --port=3306 < /initDb.sql && exit"]
+    depends_on:
+      - api_db
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db_seeder
+volumes:
+  db-data:
