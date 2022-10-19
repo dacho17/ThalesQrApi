@@ -45,9 +45,9 @@ public class QrCodeController {
 	
 	private static final String errorInRequest = "Error detected in the request.";
 	private static final String noFileInRequest = "No file has been provided to be uploaded.";
-	private static final String unauthenticatedUser = "This user is unauthenticated and can not perform the requested operation.";
+	private static final String unauthenticatedUser = "The user failed to authenticate.";
 	private static final String unauthorizedUser = "This user is unauthorized to perform the requested operation.";
-	private static final String qrCodeNotFound = "Requested qr code not found.";
+	private static final String qrCodeNotFound = "Data received from request was not found.";
 	private static final String internalServerError = "Internal Server Error occurred.";
 	
 	private static final String httpOK = "200";

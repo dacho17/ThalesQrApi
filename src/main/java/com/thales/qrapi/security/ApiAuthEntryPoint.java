@@ -20,7 +20,7 @@ import com.thales.qrapi.dtos.ResponseObject;
 @Component
 public class ApiAuthEntryPoint implements AuthenticationEntryPoint {
 	
-	private static final String unauthenticatedUser = "This user is unauthenticated and can not perform the requested operation.";
+	private static final String unauthenticatedUser = "The user failed to authenticate.";
 	
 	private static final Logger logger = LoggerFactory.getLogger(ApiAuthEntryPoint.class);
 	

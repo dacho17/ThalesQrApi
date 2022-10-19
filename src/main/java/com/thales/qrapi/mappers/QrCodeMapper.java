@@ -20,7 +20,7 @@ import com.thales.qrapi.exceptions.NotFoundApiException;
 public class QrCodeMapper {
 	
 	private static final String hashIdError = "An exception has occured while encoding/decoding the provided id.";
-	private static final String faultyId = "Unrecognized id has been provided as a request parameter.";
+	private static final String faultyId = "Requested qr code not found.";
 	
 	private static final Logger logger = LoggerFactory.getLogger(QrCodeMapper.class);
 	

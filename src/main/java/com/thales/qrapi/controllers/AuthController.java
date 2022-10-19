@@ -16,8 +16,9 @@ import com.thales.qrapi.dtos.auth.JwtResponse;
 import com.thales.qrapi.dtos.auth.LoginRequest;
 import com.thales.qrapi.dtos.auth.SignupRequest;
 import com.thales.qrapi.exceptions.BadRequestApiException;
+import com.thales.qrapi.exceptions.DbApiException;
 import com.thales.qrapi.exceptions.UniqueIdentifierException;
-import com.thales.qrapi.services.UserApiService;
+import com.thales.qrapi.services.interfaces.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,7 +38,7 @@ public class AuthController {
 	private static final String signupSuccess = "User registered successfully.";
 	
 	private static final String errorInRequest = "Error detected in the request.";
-	private static final String unauthenticatedUser = "Login failed for this user.";
+	private static final String unauthenticatedUser = "The user failed to authenticate.";
 	private static final String userAlreadyExists = "The provided username already exists.";
 	private static final String internalServerError = "Internal Server Error occurred.";
 	
@@ -50,7 +51,7 @@ public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	
 	@Autowired
-	private UserApiService userService;
+	private UserService userService;
 	
 	@Operation(summary = loginSummary)
 	@ApiResponses(value = {
@@ -84,7 +85,7 @@ public class AuthController {
 		
 		if (userService.existsByUsername(signupRequest.getUsername())) {
 			logger.error(String.format("User with [username=%s] already exists in the system.", signupRequest.getUsername()));
-			throw new UniqueIdentifierException(userAlreadyExists);
+			throw new UniqueIdentifierException(String.format("User with [username=%s] already exists in the system.", signupRequest.getUsername()));
 		}
 		
 		try {
@@ -92,6 +93,9 @@ public class AuthController {
 			
 			logger.info(signupSuccess);
 			return new ResponseObject<>(signupSuccess, newUsername);
+		} catch (DbApiException exc) {
+			logger.error(exc.getMessage());
+			throw new DbApiException(exc.getMessage());
 		} catch (Exception exc) {
 			logger.error(exc.getMessage());
 			throw new BadRequestApiException(errorInRequest);
