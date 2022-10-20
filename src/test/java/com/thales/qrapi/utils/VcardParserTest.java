@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class VcardParserTest {
 
 	@Autowired
-	private VcardParser vCardParser;
+	private ApiVcardParser vCardParser;
 	
 	@Test
 	public void parseVcard_3() {

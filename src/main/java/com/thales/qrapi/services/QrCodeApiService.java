@@ -25,7 +25,7 @@ import com.thales.qrapi.mappers.QrCodeMapper;
 import com.thales.qrapi.repositories.interfaces.QrCodeRepository;
 import com.thales.qrapi.repositories.interfaces.UserRepository;
 import com.thales.qrapi.services.interfaces.QrCodeService;
-import com.thales.qrapi.utils.QrCodeHelper;
+import com.thales.qrapi.utils.interfaces.QrCodeHelper;
 
 @Service
 public class QrCodeApiService implements QrCodeService<String, QrCodeDto> {

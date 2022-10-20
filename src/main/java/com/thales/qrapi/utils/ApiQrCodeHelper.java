@@ -15,11 +15,14 @@ import com.thales.qrapi.entities.QrCode;
 import com.thales.qrapi.entities.Vcard;
 import com.thales.qrapi.exceptions.BadRequestApiException;
 import com.thales.qrapi.exceptions.ServerApiException;
+import com.thales.qrapi.utils.interfaces.QrCodeHelper;
+import com.thales.qrapi.utils.interfaces.QrCodeReader;
+import com.thales.qrapi.utils.interfaces.VcardParser;
 
 @Component
-public class QrCodeHelper {
+public class ApiQrCodeHelper implements QrCodeHelper {
 	
-	private static final Logger logger = LoggerFactory.getLogger(QrCodeHelper.class);
+	private static final Logger logger = LoggerFactory.getLogger(ApiQrCodeHelper.class);
 	
 	@Autowired
 	private QrCodeReader qrCodeReader;

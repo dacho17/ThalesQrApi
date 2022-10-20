@@ -26,7 +26,7 @@ import com.thales.qrapi.exceptions.ServerApiException;
 public class QrCodeHelperTest {
 	
 	@Autowired
-	private QrCodeHelper qrCodeHelper;
+	private ApiQrCodeHelper qrCodeHelper;
 	
 	@Test
 	public void readQrCodesContainingText() {

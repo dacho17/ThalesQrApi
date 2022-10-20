@@ -16,14 +16,15 @@ import java.io.IOException;
 
 import com.thales.qrapi.exceptions.BadRequestApiException;
 import com.thales.qrapi.exceptions.ServerApiException;
+import com.thales.qrapi.utils.interfaces.QrCodeReader;
 
 @Component
-public class QrCodeReader {
+public class ApiQrCodeReader implements QrCodeReader {
 	
 	private static final String errorReadingQr = "An error has occured while processing the uploaded file. Make sure that the file is a valid Qr code.";
 	private static final String errorReadingFile = "An error has occured while reading the uploaded file.";
 	
-	private static final Logger logger = LoggerFactory.getLogger(QrCodeReader.class);
+	private static final Logger logger = LoggerFactory.getLogger(ApiQrCodeReader.class);
 	
 	public String readQRCode(byte[] bytes) throws ServerApiException, BadRequestApiException {
 		logger.info("Starting to read QrCode in byte format.");
