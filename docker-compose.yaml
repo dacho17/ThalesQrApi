@@ -12,7 +12,7 @@ services:
     image: mysql
     volumes:
       - ./src/main/resources/db-scripts/initDb.sql:/initDb.sql
-    entrypoint: [ "bash", "-c", "sleep 10 && mysql --user=root --password=adam --host=api_db --port=3306 < /initDb.sql && exit"]
+    entrypoint: [ "bash", "-c", "sleep 45 && mysql --user=root --password=adam --host=api_db --port=3306 < /initDb.sql && exit"]
     depends_on:
       - api_db
   api:
