@@ -1,25 +1,130 @@
 # Getting Started
 
-### Reference Documentation
-For further reference, please consider the following sections:
+Repository created to store the codebase for Thales assessment.
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.7.4/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.7.4/maven-plugin/reference/html/#build-image)
-* [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/2.7.4/reference/htmlsingle/#using.devtools)
-* [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/2.7.4/reference/htmlsingle/#actuator)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.7.4/reference/htmlsingle/#data.sql.jpa-and-spring-data)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/2.7.4/reference/htmlsingle/#web)
-* [Thymeleaf](https://docs.spring.io/spring-boot/docs/2.7.4/reference/htmlsingle/#web.servlet.spring-mvc.template-engines)
+## Building and Running the solution/tests
 
-### Guides
-The following guides illustrate how to use some features concretely:
+### 1. Install Docker Engine and Docker Compose
 
-* [Building a RESTful Web Service with Spring Boot Actuator](https://spring.io/guides/gs/actuator-service/)
-* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Handling Form Submission](https://spring.io/guides/gs/handling-form-submission/)
+##### a) For Linux users:
+* [Install docker engine](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+* [Instal docker compose](https://docs.docker.com/compose/install/linux/#install-compose)
 
+##### b) For Windows/Mac users:
+* [Install Docker Desktop tool](https://docs.docker.com/desktop)
+
+Recommended versions:
+  - docker-compose version 1.27.4
+  - Docker engine version 20.10.18
+
+### 2. Execute the run command
+Open the terminal/powershell (with administrator rights) and position yourself to the root folder of this project (folder in which file pom.xml is).
+The following commands can be ran:
+  
+  ``bash driver.sh app	// with sudo if on linux``
+  ``bash driver.sh test	// with sudo if on linux``
+  ``bash stopper.sh		// with sudo if on linux``  
+
+After running the commands, you will be notified by the terminal/powershell about what is currently happening.  
+The consequence of running these commands is graphically described in the files which can be found in DOCS folder (System_build_run.png and System_build_test.png).
+  
+  In short, executing *stopper* will terminate the running solution (running both in *app* and *test* mode).
+  *Driver* can be executed with *app* or *test* argument. Both commands will launch an SQL server and create a database if one does not already exist. Then *test* execution will execute tests and return the results of the run, while *app* will keep the application running.
+
+### 3. Engage with the results of the executed command
+If ``bash driver.sh app`` was ran, the user will be notified through the console when the application can be accessed.
+  The application will be running on [localhost:8080](localhost:8080).
+  User will have access to the API documentation and the solution through [this webpage](localhost:8080/swagger-ui/index.html).
+
+----
+----
+
+## Interacting with the application
+### OpenAPI/Swagger
+  The documentation is created using Swagger and it offers the overview of opened endpoints.
+  The endpoints are categorized based on the controllers in which they are implemented.
+  There are two controllers implemented in the solution, one realated to the authentication functionalities (signup and login).
+  The other one offers CRUD functionalities towards the users of the application who want to store, fetch, or delete qrCodes.
+
+  Each endpoint is described with:
+* HTTP method
+* relative route of an endpoint (relative to [localhost:8080](localhost:8080))
+* use-case description
+* icon suggesting whether authentication is required to access the endpoint
+* request parameters, content-type, and contents, along with the examples
+* response codes, content-type, and contents, along with the examples
+
+Documentation on how to Authenticate and Authorize users can be found in auth_doc.pdf in DOCS folder.
+  
+### Postman
+  The endpoints can be interacted with using a client software such as Postman.  
+  Authorization is done in a similar fashion as described in auth_doc.pdf, with the difference that after receiving *JWT_token*, user must go under *Headers* tab of the request and add the *Authorization* header with value = Bearer *JWT_token*. Now, the next time this request is sent it will be carrying the *Authorization* header.
+
+
+### Running tests
+  The tests are ran using ``bash driver.sh test`` command.  
+  After running the command, you will be notified by the terminal/powershell about what is currently happening.  
+  The tests implemented are focusing mainly on two components of the solution, namely *QrCodeHelper* and *VcardParser*:
+
+* *VcardParserTest* suite verifies that *vcard* contents get successfully detected when parsing a string generated by *QrCodeReader*.
+* *QrCodeHelperTest* suite verifies that generated *qrCodes* carry valid *ContentType* and valid content
+
+----
+----
+
+## Architecture
+This section describes the architecture of the solution as well as some decisions made.  
+While reading this section it is strongly recommended to consult with the *component_architecture.png* file which can be found in DOCS folder.
+
+#### Database
+It is suggested to consult *db_schema.png* file while reading this seciton. This file contains the database schema and can be found in DOCS folder.  
+The database consists of three tables, namely *qr_codes*, *vcards*, and *users*.  
+Two relationships exist. One relationship connects *qr_codes* and *vcards* table through *vcard_id* - this has been done due to the anticipation that there will be a need to granularly store some of the *vcards* parameters in the database. *vcards* table is therefore created already, in order to store these values if the need emerges.  
+Having this table ready also unburdens *qr_codes* table from carrying the columns for *vcard* parameters. These columns would be null in cases where *qrcodes* are not of *vcard* content.  
+
+The second relationship is between *qr_codes* table and *users* table. This connects qrcodes to their creators.  
+The relationship has been implemented in anticipation that, sometime in the future, the users might want to only fetch data which they stored themselves.  
+
+One implementation detail worth noticing is *is_deleted* column in *qr_codes* table. Which signifies whether *qrcode* has been deleted or not. We do not delete *qrcode* entries from the database, but mark them as deleted setting the value within this column to 1.  
+
+Another thing to mention is that *byte_content* stores the value of original *qrcode* byte array which has been received from the client after receiving the file to be uploaded. This value holds the original data received and is stored for the reason of reproducing the original file.
+
+#### Persistence Layer
+This layer is implemented using repository pattern.  
+The layer handles communication with the data layer and offers CRUD functionalities.  
+This layer manages entity objects and triggers database to perform operations concerning mentioned objects.  
+SQL Java functionality is mapped to SQL and executed on the database.  
+
+#### Service Layer
+Service layer was imagined to:
+* validate the data incoming requests carry
+* execute the business logic required
+* if necessary, map the data to data consumable by persistence layer - entities
+* delegate further execution to persistence layer
+* map the data retrieved by persistence layer to DTO data which can safely be sent back to the client (e.g. entry id encoding)
+* serve the requests received by the presentation layer
+* standardize exception handling  
+
+The clear overview of this layers' constituents can be acquired by consulting the forementioned documentation file.
+
+#### Presentation Layer
+Presentation layer consists of controllers and security mechanisms (namely authentication and authorization).  
+In short, authentication and authorization rules will be applied within FilterChain to incoming HTTP requests. If the requests do not satisfy the rules, exception will be thrown and processed by the implemented handlers. The 40x response will be sent to the client accordingly.  
+If a request passes FilterChain it will be received by Controllers (consult with *component_architecture.png* for a clear overview).  
+
+A special *ApiExceptionController* is implemented to handle the exceptions thrown by the Controllers.  
+Some of the exceptions thrown in the system are custom implemented. All exceptions will be caught by *ApiExceptionController* and appropriately processed. Clients will receive responses accordingly.  
+
+Behavior of the two remaining controllers has been well documented in Swagger.
+
+#### Docker
+The application is abstracted using Docker, so that it can ran on any machine that has Docker engine and docker-compose tools installed. It makes the application transportable to anyone anywhere.  
+For the purpose of delivering the solution for a review, I though it is a good idea to Dockerize the solution.  
+The high level architecture representation in Docker terms can be found in high_level_architecture.png file within DOCS folder.
+
+
+#### Logging
+The application is logging its activity using *logback*. Logs can be found in directory logs within the root directory of the project.
+
+----
+----
