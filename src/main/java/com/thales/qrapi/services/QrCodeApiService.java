@@ -16,12 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.thales.qrapi.dtos.qrcode.QrCodeDto;
 import com.thales.qrapi.entities.QrCode;
+import com.thales.qrapi.entities.User;
 import com.thales.qrapi.exceptions.BadRequestApiException;
 import com.thales.qrapi.exceptions.DbApiException;
 import com.thales.qrapi.exceptions.NotFoundApiException;
 import com.thales.qrapi.exceptions.ServerApiException;
 import com.thales.qrapi.mappers.QrCodeMapper;
 import com.thales.qrapi.repositories.interfaces.QrCodeRepository;
+import com.thales.qrapi.repositories.interfaces.UserRepository;
 import com.thales.qrapi.services.interfaces.QrCodeService;
 import com.thales.qrapi.utils.QrCodeHelper;
 
@@ -38,6 +40,9 @@ public class QrCodeApiService implements QrCodeService<String, QrCodeDto> {
 	private QrCodeRepository<Long, QrCode> qrCodeRepo;
 	
 	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
 	private QrCodeMapper qrCodeMapper;
 	
 	@Autowired
@@ -51,7 +56,7 @@ public class QrCodeApiService implements QrCodeService<String, QrCodeDto> {
 			byte[] bytes = file.getBytes();
 			
 			QrCode newQrCode = qrCodeHelper.generateNewQrCode(bytes, file.getOriginalFilename());
-			setCreatedByForNewQrCode(newQrCode);
+			setUploaderOfQrCode(newQrCode);
 			
 			logger.info(String.format("About to store the newly generated qrCode with [filename=%s].", newQrCode.getFileName()));
 			qrCodeRepo.save(newQrCode);
@@ -153,9 +158,12 @@ public class QrCodeApiService implements QrCodeService<String, QrCodeDto> {
 		return id;
 	}
 	
-	private void setCreatedByForNewQrCode(QrCode qrCode) {
+	private void setUploaderOfQrCode(QrCode qrCode) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		qrCode.setCreatedBy(userDetails.getUsername());
+		
+		User authUser = userRepository.findByUsername(userDetails.getUsername()).get();		
+		
+		authUser.add(qrCode);
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.thales.qrapi.dtos.enums.QrCodeContentType;
 import com.thales.qrapi.dtos.qrcode.QrCodeDto;
 import com.thales.qrapi.entities.QrCode;
+import com.thales.qrapi.entities.User;
 import com.thales.qrapi.exceptions.BadRequestApiException;
 import com.thales.qrapi.exceptions.NotFoundApiException;
 
@@ -21,6 +22,7 @@ public class QrCodeMapper {
 	
 	private static final String hashIdError = "An exception has occured while encoding/decoding the provided id.";
 	private static final String faultyId = "Requested qr code not found.";
+	private static final String unknownUploader = "unknown";
 	
 	private static final Logger logger = LoggerFactory.getLogger(QrCodeMapper.class);
 	
@@ -34,13 +36,15 @@ public class QrCodeMapper {
 	public QrCodeDto mapEntToDto(QrCode qrCode) {
 		String hashedId = encodeId(qrCode.getId());
 
+		User uploader = qrCode.getUser();
+		
 		QrCodeContentType contentType = QrCodeContentType.getType(qrCode.getContentType());
 		QrCodeDto res = new QrCodeDto(
 			hashedId,
 			qrCode.getFileName(),
 			contentType,
 			null,
-			qrCode.getCreatedBy(),
+			uploader != null ? uploader.getUsername() : unknownUploader,
 			new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(qrCode.getCreatedDate())
 		);
 		
