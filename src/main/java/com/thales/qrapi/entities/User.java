@@ -1,15 +1,21 @@
 package com.thales.qrapi.entities;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -23,6 +29,11 @@ public class User {
 	
 	@Column(name = "role_type")
 	private short roleType;
+	
+	@OneToMany(mappedBy = "user",
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+					CascadeType.DETACH, CascadeType.REFRESH})
+	private List<QrCode> qrCodes;
 	
 	public User() {
 	}
@@ -65,9 +76,27 @@ public class User {
 	public void setRoleType(short roleType) {
 		this.roleType = roleType;
 	}
+
+	public List<QrCode> getQrCodes() {
+		return qrCodes;
+	}
+
+	public void setQrCodes(List<QrCode> qrCodes) {
+		this.qrCodes = qrCodes;
+	}
 	
+	public void add(QrCode qrCode) {
+		if (qrCodes == null) {
+			qrCodes = new ArrayList<>();
+		}
+		
+		qrCodes.add(qrCode);
+		qrCode.setUser(this);
+	}
+
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", roleType=" + roleType + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", roleType=" + roleType
+				+ ", qrCodes=" + qrCodes + "]";
 	}
 }

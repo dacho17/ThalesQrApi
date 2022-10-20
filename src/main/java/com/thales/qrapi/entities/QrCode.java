@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -42,8 +43,10 @@ public class QrCode {
 	@Column(name = "is_deleted")
 	private boolean isDeleted;
 
-	@Column(name = "created_by")
-	private String createdBy;
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+					CascadeType.DETACH, CascadeType.REFRESH})
+	@JoinColumn(name = "created_by", referencedColumnName = "username")
+	private User user;
 
 	@Column(name = "created_date")
 	private Timestamp createdDate;
@@ -54,14 +57,14 @@ public class QrCode {
 	public QrCode() {
 	}
 
-	public QrCode(String fileName, short contentType, byte[] byteContent, String textContent, String createdBy,
+	public QrCode(String fileName, short contentType, byte[] byteContent, String textContent, User user,
 			Timestamp createdDate) {
 		super();
 		this.fileName = fileName;
 		this.contentType = contentType;
 		this.byteContent = byteContent;
 		this.textContent = textContent;
-		this.createdBy = createdBy;
+		this.user = user;
 		this.createdDate = createdDate;
 	}
 
@@ -121,12 +124,12 @@ public class QrCode {
 		this.isDeleted = isDeleted;
 	}
 
-	public String getCreatedBy() {
-		return createdBy;
+	public User getUser() {
+		return user;
 	}
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Timestamp getCreatedDate() {
@@ -149,7 +152,6 @@ public class QrCode {
 	public String toString() {
 		return "QrCode [id=" + id + ", fileName=" + fileName + ", contentType=" + contentType + ", byteContent="
 				+ Arrays.toString(byteContent) + ", textContent=" + textContent + ", vCard=" + vCard + ", isDeleted="
-				+ isDeleted + ", createdBy=" + createdBy + ", createdDate=" + createdDate + ", deletedDate="
-				+ deletedDate + "]";
+				+ isDeleted + ", user=" + user + ", createdDate=" + createdDate + ", deletedDate=" + deletedDate + "]";
 	}
 }
